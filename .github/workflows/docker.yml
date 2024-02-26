@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Images
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,11 +22,13 @@ jobs:
       - name: Build Docker image for frontend
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_frontend:latest -f Dockerfile_frontend .
 
-      - name: Build Docker image for backend
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_backend:latest -f Dockerfile_backend .
-
       - name: Push Docker image for frontend to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_frontend:latest
 
-      - name: Push Docker image for backend to Docker Hub
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_backend:latest
+      - name: Build backend using docker-compose
+        run: docker-compose -f docker-compose.yml build backend
+
+      - name: Tag and Push backend image to Docker Hub
+        run: |
+          docker tag backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/quirknotes_backend:latest
