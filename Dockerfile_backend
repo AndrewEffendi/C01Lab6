@@ -10,9 +10,6 @@ COPY quirknotes/backend/package*.json ./
 # Install backend dependencies
 RUN npm install
 
-# Copy backend source code
-COPY quirknotes/backend ./
-
 # Use a lightweight webserver to serve backend assets
 FROM nginx:alpine AS webserver
 
