@@ -13,9 +13,6 @@ RUN npm install
 # Copy backend source code
 COPY quirknotes/backend ./
 
-# Build backend
-RUN npm run dev
-
 # Use a lightweight webserver to serve backend assets
 FROM nginx:alpine AS webserver
 
@@ -33,3 +30,6 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # Command to start Mongodb
 CMD ["mongod"]
+
+# start backend
+CMD ["npm", "run", "dev"]
